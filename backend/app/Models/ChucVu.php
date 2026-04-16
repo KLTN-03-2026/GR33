@@ -18,7 +18,7 @@ class ChucVu extends Model
 
     public function chucNangs()
     {
-        return $this->belongsToMany(ChucNang::class, 'chuc_vu_chuc_nangs', 'chuc_vu_id', 'chuc_nang_id');
+        return $this->belongsToMany(ChucNang::class, 'phan_quyens', 'chuc_vu_id', 'chuc_nang_id');
     }
 
     public function nhanViens()
