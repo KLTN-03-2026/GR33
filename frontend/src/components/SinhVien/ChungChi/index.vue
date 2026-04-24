@@ -122,7 +122,7 @@
                                     <button class="btn btn-action-pink" @click="moModalChiTiet(item)" title="Xem chi tiết">
                                         <i class="bi bi-eye-fill"></i>
                                     </button>
-                                    <button class="btn btn-action-pink" @click="moModalSua(item)" :disabled="item.trang_thai == 1 || $authSV.user.trang_thai == 0">
+                                    <button class="btn btn-action-pink" @click="moModalSua(item)" :disabled="item.trang_thai == 1 || item.is_phe_duyet == 0 || $authSV.user.trang_thai == 0">
                                         <i class="bi bi-pencil-fill"></i>
                                     </button>
                                 </div>
@@ -534,7 +534,7 @@ export default {
                 : `chung-chis/create`;
 
             if (this.laCapNhat) {
-                formData.append('_method', 'PUT');
+                // formData.append('_method', 'PUT'); // Bỏ dòng này vì Backend dùng Route::post
             }
 
             // Lưu ý: Laravel Route::post cho cả update khi gửi file qua FormData

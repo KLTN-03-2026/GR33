@@ -122,7 +122,7 @@
                   <button class="btn btn-action-pink" @click="moModalChiTiet(item)" title="Xem chi tiết">
                     <i class="bi bi-eye-fill"></i>
                   </button>
-                  <button class="btn btn-action-pink" @click="moModalSua(item)" :disabled="item.is_locked || $authSV.user.trang_thai == 0">
+                  <button class="btn btn-action-pink" @click="moModalSua(item)" :disabled="item.trang_thai == 1 || item.is_phe_duyet == 0 || $authSV.user.trang_thai == 0">
                     <i class="bi bi-pencil-fill"></i>
                   </button>
                 </div>
