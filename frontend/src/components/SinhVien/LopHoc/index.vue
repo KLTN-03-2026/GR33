@@ -124,7 +124,7 @@
                                 <span v-else-if="item.da_dang_ky" class="text-success fw-700 small">
                                     <i class="bi bi-check-circle-fill me-1"></i> Đã đăng ký
                                 </span>
-                                <span v-else class="text-muted small fw-600">N/A</span>
+                                <span v-else class="text-muted small fw-600">Không được phép đăng ký</span>
                             </td>
                         </tr>
                     </tbody>
