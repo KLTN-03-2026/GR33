@@ -56,7 +56,7 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-700 small text-uppercase opacity-75">Họ và tên</label>
-                                    <input type="text" class="form-control flux-input" v-model="ho_so.ho_ten" required>
+                                    <input type="text" class="form-control flux-input bg-light" v-model="ho_so.ho_ten" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-700 small text-uppercase opacity-75">Email (Tài khoản)</label>
