@@ -121,9 +121,17 @@
                                     @click="dangKyLop(item)">
                                     Đăng ký học
                                 </button>
-                                <span v-else-if="item.da_dang_ky" class="text-success fw-700 small">
-                                    <i class="bi bi-check-circle-fill me-1"></i> Đã đăng ký
-                                </span>
+                                <div v-else-if="item.da_dang_ky" class="d-flex flex-column align-items-center gap-1">
+                                    <span class="text-success fw-700 small">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Đã đăng ký
+                                    </span>
+                                    <button v-if="item.trang_thai === 'sap_bat_dau'" 
+                                        class="btn btn-sm btn-outline-danger fw-700 px-3 py-0 mt-1" 
+                                        style="font-size: 11px; border-radius: 6px;"
+                                        @click="huyDangKyLop(item)">
+                                        Hủy đăng ký
+                                    </button>
+                                </div>
                                 <span v-else class="text-muted small fw-600">Không được phép đăng ký</span>
                             </td>
                         </tr>
@@ -204,6 +212,22 @@ export default {
                     })
                     .catch(err => {
                         this.$toast.error(err.response?.data?.message || "Lỗi đăng ký lớp học!");
+                    });
+            }
+        },
+        huyDangKyLop(item) {
+            if (confirm(`Bạn có chắc chắn muốn hủy đăng ký lớp học: ${item.ten_lop_hoc}? Hành động này không thể hoàn tác.`)) {
+                baseRequestSinhVien.post("lop-hocs/huy-dang-ky", { lop_hoc_id: item.id })
+                    .then(res => {
+                        if (res.data.status) {
+                            this.$toast.success(res.data.message);
+                            this.layDuLieu(); // Làm mới danh sách
+                        } else {
+                            this.$toast.error(res.data.message);
+                        }
+                    })
+                    .catch(err => {
+                        this.$toast.error(err.response?.data?.message || "Lỗi hủy đăng ký lớp học!");
                     });
             }
         }
