@@ -420,11 +420,12 @@ export default {
                 
                 if (this.tuKhoaTimKiem) {
                     const kw = this.tuKhoaTimKiem.toLowerCase();
-                    res = res.filter(i =>
-                        i.ma_lop_hoc.toLowerCase().includes(kw) ||
-                        i.ten_lop_hoc.toLowerCase().includes(kw) ||
-                        i.giangVien?.ho_ten?.toLowerCase().includes(kw)
-                    );
+                    res = res.filter(i => {
+                        const tenGV = this.layTenGiangVien(i.giang_vien_id) || i.giangVien?.ho_ten || '';
+                        return i.ma_lop_hoc.toLowerCase().includes(kw) ||
+                            i.ten_lop_hoc.toLowerCase().includes(kw) ||
+                            tenGV.toLowerCase().includes(kw);
+                    });
                 }
             } else if (this.tuKhoaTimKiem) {
                 // If keywords exist but no year selected, we follow "chọn năm học rồi mới tìm kiếm"

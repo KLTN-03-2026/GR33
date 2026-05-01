@@ -8,7 +8,7 @@
 
         <div class="navbar-spacer"></div>
 
-        <!-- Thông báo -->
+        <!-- Notifications -->
         <div class="navbar-icon-btn position-relative" title="Thông báo" @click.stop="toggleThongBao">
             <i class="bi bi-bell"></i>
             <span v-if="tongThongBao > 0 && !daXem" class="notif-dot animate-pulse"></span>
