@@ -138,8 +138,8 @@
                     <button v-if="item.trang_thai == 0" 
                       class="btn btn-sm btn-pink-outline rounded-pill fw-700 px-3"
                       @click="guiYeuCauNFT(item)"
-                      :disabled="dangLuu || $authSV.user.trang_thai == 0 || $authSV.user.trang_thai == 2"
-                      :title="($authSV.user.trang_thai == 0 || $authSV.user.trang_thai == 2) ? 'Trạng thái tài khoản không cho phép yêu cầu đúc NFT' : 'Gửi yêu cầu'">
+                      :disabled="dangLuu || $authSV.user.trang_thai == 0 || $authSV.user.trang_thai == 2 || item.diem_tong_ket == null"
+                      :title="item.diem_tong_ket == null ? 'Chưa có điểm tổng kết, không thể yêu cầu NFT' : ($authSV.user.trang_thai == 0 || $authSV.user.trang_thai == 2) ? 'Trạng thái tài khoản không cho phép yêu cầu đúc NFT' : 'Gửi yêu cầu'">
                       <i class="bi bi-send-check-fill me-1"></i> Gửi yêu cầu
                     </button>
                     <span v-else-if="item.trang_thai == 1" class="text-success small fw-700">
@@ -334,6 +334,11 @@ export default {
 
         if (!vi?.dia_chi_vi) {
             this.$toast.error("Tài khoản của bạn chưa được liên kết với ví Blockchain. Vui lòng cài đặt ví tại thông tin cá nhân trước khi thực hiện yêu cầu NFT.");
+            return;
+        }
+
+        if (item.diem_tong_ket == null) {
+            this.$toast.error("Bảng điểm chưa hoàn thành (chưa có điểm tổng kết). Vui lòng đợi giảng viên cập nhật điểm trước khi yêu cầu NFT.");
             return;
         }
 
