@@ -200,7 +200,7 @@
       </div>
     </div>
 
-    <!-- Modal Xác nhận Xóa -->
+    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="modalXoa" tabindex="-1" aria-hidden="true" ref="modalXoaEle">
       <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
