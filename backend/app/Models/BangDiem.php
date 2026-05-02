@@ -58,7 +58,7 @@ class BangDiem extends Model
                     $model->diem_he_4 = $grades['he_4'];
                     $model->ngay_vao_diem = date('Y-m-d');
                 }
-            } elseif ($lopHoc && $lopHoc->trang_thai === 'dang_mo') {
+            } elseif ($lopHoc && ($lopHoc->trang_thai === 'dang_mo' || $lopHoc->trang_thai === 'sap_bat_dau')) {
                 $model->diem_tong_ket = null;
                 $model->diem_chu = null;
                 $model->diem_he_4 = null;
