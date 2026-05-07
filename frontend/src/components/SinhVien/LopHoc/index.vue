@@ -118,7 +118,7 @@
                                     :class="{ 'opacity-50 cursor-not-allowed': trangThaiSV !== 1 }"
                                     :disabled="trangThaiSV !== 1"
                                     style="border-radius: 8px;"
-                                    @click="dangKyLop(item)">
+                                    @click="moModalDangKy(item)">
                                     Đăng ký học
                                 </button>
                                 <div v-else-if="item.da_dang_ky" class="d-flex flex-column align-items-center gap-1">
@@ -128,7 +128,7 @@
                                     <button v-if="item.trang_thai === 'sap_bat_dau'" 
                                         class="btn btn-sm btn-outline-danger fw-700 px-3 py-0 mt-1" 
                                         style="font-size: 11px; border-radius: 6px;"
-                                        @click="huyDangKyLop(item)">
+                                        @click="moModalHuyDangKy(item)">
                                         Hủy đăng ký
                                     </button>
                                 </div>
@@ -137,6 +137,54 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <div class="modal fade" id="dangKyModal" tabindex="-1" ref="modalDangKy">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+                    <div class="modal-header border-0 bg-pink-gradient text-white p-4" style="border-radius: 24px 24px 0 0">
+                        <h5 class="modal-title fw-800">Xác nhận Đăng ký</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4 text-center">
+                        <i class="bi bi-journal-plus text-accent display-1 opacity-25 mb-3 d-block"></i>
+                        <h5 class="fw-800 text-dark mb-3">Bạn chắc chắn muốn đăng ký lớp học này?</h5>
+                        <p class="text-muted mb-0">Lớp: <span class="text-accent fw-700">{{ lopDangChon?.ten_lop_hoc }}</span></p>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light-pink flex-fill py-2 fw-600" data-bs-dismiss="modal">Hủy bỏ</button>
+                        <button type="button" class="btn btn-pink flex-fill py-2 fw-800 shadow-pink" @click="xacNhanDangKy" :disabled="dangXuLy">
+                            <span v-if="dangXuLy" class="spinner-border spinner-border-sm me-2"></span>
+                            Đồng ý Đăng ký
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="huyDangKyModal" tabindex="-1" ref="modalHuyDangKy">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+                    <div class="modal-header border-0 bg-danger text-white p-4" style="border-radius: 24px 24px 0 0">
+                        <h5 class="modal-title fw-800">Xác nhận Hủy Đăng ký</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4 text-center">
+                        <i class="bi bi-exclamation-triangle-fill text-danger display-1 opacity-25 mb-3 d-block"></i>
+                        <h5 class="fw-800 text-dark mb-3">Bạn chắc chắn muốn hủy đăng ký?</h5>
+                        <p class="text-muted mb-0">Lớp: <span class="text-danger fw-700">{{ lopDangChon?.ten_lop_hoc }}</span></p>
+                        <p class="text-muted small mt-2">Hành động này không thể hoàn tác.</p>
+                    </div>
+                    <div class="modal-footer border-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light flex-fill py-2 fw-600" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger flex-fill py-2 fw-800" @click="xacNhanHuyDangKy" :disabled="dangXuLy">
+                            <span v-if="dangXuLy" class="spinner-border spinner-border-sm me-2"></span>
+                            Xác nhận Hủy
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -153,6 +201,10 @@ export default {
             danhSachMon: [],
             trangThaiSV: null,
             dangTai: false,
+            dangXuLy: false,
+            lopDangChon: null,
+            instDangKy: null,
+            instHuyDangKy: null,
             boLoc: {
                 mon_hoc_id: "",
                 nam_hoc: "",
@@ -173,6 +225,10 @@ export default {
     mounted() {
         this.layDanhSachMon();
         this.layDuLieu();
+        if (window.bootstrap) {
+            this.instDangKy = new window.bootstrap.Modal(this.$refs.modalDangKy);
+            this.instHuyDangKy = new window.bootstrap.Modal(this.$refs.modalHuyDangKy);
+        }
     },
     methods: {
         layDanhSachMon() {
@@ -195,41 +251,57 @@ export default {
                     this.dangTai = false;
                 });
         },
-        dangKyLop(item) {
+        moModalDangKy(item) {
             if (this.trangThaiSV !== 1) {
                 this.$toast.warning(`Bạn đang ở trạng thái ${this.tenTrangThaiSV}, không thể đăng ký!`);
                 return;
             }
-            if (confirm(`Bạn có chắc muốn đăng ký lớp học: ${item.ten_lop_hoc}?`)) {
-                baseRequestSinhVien.post("lop-hocs/dang-ky", { lop_hoc_id: item.id })
-                    .then(res => {
-                        if (res.data.status) {
-                            this.$toast.success(res.data.message);
-                            this.layDuLieu(); // Làm mới danh sách
-                        } else {
-                            this.$toast.error(res.data.message);
-                        }
-                    })
-                    .catch(err => {
-                        this.$toast.error(err.response?.data?.message || "Lỗi đăng ký lớp học!");
-                    });
-            }
+            this.lopDangChon = item;
+            this.instDangKy?.show();
         },
-        huyDangKyLop(item) {
-            if (confirm(`Bạn có chắc chắn muốn hủy đăng ký lớp học: ${item.ten_lop_hoc}? Hành động này không thể hoàn tác.`)) {
-                baseRequestSinhVien.post("lop-hocs/huy-dang-ky", { lop_hoc_id: item.id })
-                    .then(res => {
-                        if (res.data.status) {
-                            this.$toast.success(res.data.message);
-                            this.layDuLieu(); // Làm mới danh sách
-                        } else {
-                            this.$toast.error(res.data.message);
-                        }
-                    })
-                    .catch(err => {
-                        this.$toast.error(err.response?.data?.message || "Lỗi hủy đăng ký lớp học!");
-                    });
-            }
+        moModalHuyDangKy(item) {
+            this.lopDangChon = item;
+            this.instHuyDangKy?.show();
+        },
+        xacNhanDangKy() {
+            if (!this.lopDangChon) return;
+            this.dangXuLy = true;
+            baseRequestSinhVien.post("lop-hocs/dang-ky", { lop_hoc_id: this.lopDangChon.id })
+                .then(res => {
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.instDangKy?.hide();
+                        this.layDuLieu(); // Làm mới danh sách
+                    } else {
+                        this.$toast.error(res.data.message);
+                    }
+                })
+                .catch(err => {
+                    this.$toast.error(err.response?.data?.message || "Lỗi đăng ký lớp học!");
+                })
+                .finally(() => {
+                    this.dangXuLy = false;
+                });
+        },
+        xacNhanHuyDangKy() {
+            if (!this.lopDangChon) return;
+            this.dangXuLy = true;
+            baseRequestSinhVien.post("lop-hocs/huy-dang-ky", { lop_hoc_id: this.lopDangChon.id })
+                .then(res => {
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.instHuyDangKy?.hide();
+                        this.layDuLieu(); // Làm mới danh sách
+                    } else {
+                        this.$toast.error(res.data.message);
+                    }
+                })
+                .catch(err => {
+                    this.$toast.error(err.response?.data?.message || "Lỗi hủy đăng ký lớp học!");
+                })
+                .finally(() => {
+                    this.dangXuLy = false;
+                });
         }
     }
 };
@@ -249,6 +321,17 @@ export default {
     transition: all 0.2s;
     background: #f8fafc;
 }
+.btn-light-pink {
+    background: #fdf2f8; color: #db2777; border-radius: 12px;
+    padding: 8px 16px; border: 1px solid #fce7f3; font-weight: 600;
+}
+.btn-pink {
+    background: #db2777; color: white; border-radius: 14px;
+    padding: 10px 20px; border: none; font-weight: 700; transition: all 0.3s;
+}
+.btn-pink:hover { background: #be185d; transform: translateY(-2px); }
+.bg-pink-gradient { background: linear-gradient(135deg, #db2777 0%, #be185d 100%); }
+.shadow-pink { box-shadow: 0 10px 15px -3px rgba(219,39,119,0.25); }
 .flux-input:focus { border-color: #db2777; box-shadow: 0 0 0 3px rgba(219, 39, 119, 0.1); outline: none; background: white; }
 .badge { padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; text-transform: uppercase; }
 .badge-warning-subtle { background: #fffbeb; color: #d97706; }

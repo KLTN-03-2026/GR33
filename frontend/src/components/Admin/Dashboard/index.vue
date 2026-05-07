@@ -68,28 +68,7 @@
 
     <!-- System Info Section -->
     <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="info-card p-4 shadow-sm border-0 bg-white" style="border-radius: 24px;">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h5 class="fw-800 mb-0">Thông báo hệ thống</h5>
-                    <span class="badge bg-light text-muted border px-3">Mới nhất</span>
-                </div>
-                <div class="announcement-item d-flex gap-3 p-3 mb-3 border-start border-4 border-rose bg-light rounded-3">
-                    <div class="text-rose"><i class="bi bi-info-circle-fill fs-5"></i></div>
-                    <div>
-                        <div class="fw-700">Cập nhật giao diện Rose Theme</div>
-                        <p class="small text-muted mb-0">Hệ thống vừa được nâng cấp lên giao diện đồng bộ màu đỏ hoa hồng cao cấp.</p>
-                    </div>
-                </div>
-                <div class="announcement-item d-flex gap-3 p-3 bg-light rounded-3 opacity-75">
-                    <div class="text-muted"><i class="bi bi-check-circle-fill fs-5"></i></div>
-                    <div>
-                        <div class="fw-700">Hoàn tất sao lưu dữ liệu</div>
-                        <p class="small text-muted mb-0">Dữ liệu học kỳ 2 (2025-2026) đã được sao lưu an toàn vào lúc 03:00 sáng nay.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="col-lg-4">
             <div class="info-card p-4 shadow-sm border-0 bg-white text-center h-100" style="border-radius: 24px;">
                 <div class="mb-3 mt-2">
