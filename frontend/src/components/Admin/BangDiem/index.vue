@@ -40,6 +40,10 @@
             </div>
           </div>
           <div class="col-md-2 d-flex align-items-end justify-content-end gap-2" style="padding-top: 28px;">
+            <select class="form-select btn-light border fw-600" style="width: auto;" v-model="kieuSapXep">
+              <option value="newest">Mới nhất</option>
+              <option value="oldest">Cũ nhất</option>
+            </select>
             <button class="btn btn-light border" @click="layDuLieu" title="Làm mới">
               <i class="bi bi-arrow-clockwise"></i>
             </button>
@@ -353,6 +357,7 @@ export default {
       danhSachSinhVien: [],
       danhSachLopHoc: [],
       dangTai: false,
+            kieuSapXep: 'newest',
       dangLuu: false,
       laCapNhat: false,
       tuKhoaTimKiem: "",
@@ -386,6 +391,9 @@ export default {
     };
   },
   watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        },
     namHocDaChon() { this.trangHienTai = 1; },
     idLopDaChon() { this.trangHienTai = 1; },
     tuKhoaTimKiem() { this.trangHienTai = 1; },
@@ -507,6 +515,7 @@ export default {
       baseRequestAdmin.get("bang-diems/get-data")
         .then(res => {
           this.danhSach = res.data.list || res.data.data || res.data;
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
         })
         .catch(err => {
           console.error("Lỗi lấy data bảng điểm:", err);
@@ -615,9 +624,8 @@ export default {
         .finally(() => {
           this.dangTai = false;
         });
-    },
-
-  }
+    }
+    }
 };
 </script>
 

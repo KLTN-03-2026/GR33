@@ -21,6 +21,10 @@
                     <input type="text" v-model="tuKhoaTimKiem" placeholder="Tìm theo tên hoặc mã đơn vị..." />
                 </div>
                 <div class="d-flex gap-2">
+                    <select class="form-select btn-light border fw-600 me-2" style="width: auto;" v-model="kieuSapXep">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                    </select>
                     <button class="btn btn-light border" @click="layDuLieu">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
@@ -247,6 +251,7 @@ export default {
             dangLuu: false,
             laCapNhat: false,
             tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
             duLieuForm: {
                 id: null,
                 ma_don_vi: "",
@@ -263,6 +268,10 @@ export default {
         };
     },
     watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        },
+        
         tuKhoaTimKiem() {
             this.trangHienTai = 1;
         }
@@ -306,6 +315,7 @@ export default {
             baseRequestAdmin.get("don-vi-caps/get-data")
                 .then(res => {
                     this.danhSach = res.data.data || [];
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
                 })
                 .catch(err => {
                     console.error("Lỗi lấy data đơn vị cấp:", err);

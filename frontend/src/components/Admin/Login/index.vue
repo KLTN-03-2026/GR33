@@ -120,7 +120,7 @@ export default {
       mat_khau: "",
       hien_mat_khau: false,
       ghi_nho_mat_khau: false,
-      dang_tai: false,
+      dang_tai: false
     };
   },
   created() {
@@ -139,8 +139,8 @@ export default {
 
       const payload = {
         email: this.tai_khoan,
-        mat_khau: this.mat_khau,
-      };
+        mat_khau: this.mat_khau
+    };
 
       baseRequestClient
         .post("login/nhan-vien", payload)
@@ -179,9 +179,9 @@ export default {
         .finally(() => {
           this.dang_tai = false;
         });
-    },
-  },
-};
+    }
+    }
+    };
 </script>
 
 <style scoped>

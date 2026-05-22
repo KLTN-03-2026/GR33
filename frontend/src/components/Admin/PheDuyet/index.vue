@@ -373,14 +373,14 @@ export default {
       dia_chi_dang_ket_noi: "",
       vi_dang_ky_he_thong: "",
       dang_ky_so: false,
-      dang_duc_nft: null,
+      dang_duc_nft: null
     };
   },
   watch: {
     tab_hien_tai() {
       this.lay_du_lieu();
+    }
     },
-  },
   mounted() {
     this.lay_du_lieu();
     if (window.bootstrap) {

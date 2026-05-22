@@ -772,8 +772,9 @@ class NftController extends Controller
         $currentContract = SmartContract::where('dia_chi_contract', env('BLOCKCHAIN_CONTRACT_ADDRESS'))->first();
         $currentContractId = $currentContract ? $currentContract->id : 0;
 
+        $sortOrder = $request->input('sort_order', 'newest') === 'oldest' ? 'asc' : 'desc';
         $query = NftVanBang::with(['nftable.sinhVien', 'nhanVienKy', 'lichSuGiaoDichs'])
-                ->orderBy('updated_at', 'desc');
+                ->orderBy('updated_at', $sortOrder);
 
         // Lọc theo loại nếu cần
         if ($request->has('type') && $request->type != 'TatCa') {

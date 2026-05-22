@@ -87,6 +87,7 @@ export default {
         return {
             danhSach: [],
             dangTai: false,
+            
             tuKhoa: "",
             locTrangThai: "-1"
         };

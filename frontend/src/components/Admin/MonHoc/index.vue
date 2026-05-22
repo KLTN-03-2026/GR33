@@ -28,7 +28,11 @@
             <option value="">Tất cả tín chỉ</option>
             <option v-for="c in [1, 2, 3, 4, 5]" :key="c" :value="c">{{ c }} tín chỉ</option>
           </select>
-          <button class="btn btn-light border" @click="layDuLieu">
+          <select class="form-select btn-light border fw-600 me-2" style="width: auto;" v-model="kieuSapXep">
+                            <option value="newest">Mới nhất</option>
+                            <option value="oldest">Cũ nhất</option>
+                        </select>
+                        <button class="btn btn-light border" @click="layDuLieu">
             <i class="bi bi-arrow-clockwise"></i>
           </button>
         </div>
@@ -277,6 +281,7 @@ export default {
       dangTai: false,
       dangLuu: false,
       tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
       locTinChi: "",
       laCapNhat: false,
       trangHienTai: 1,
@@ -311,8 +316,9 @@ export default {
         ketQua = ketQua.filter(item => parseInt(item.so_tin_chi) === parseInt(this.locTinChi));
       }
       
-      return ketQua;
-    },
+      
+            return ketQua;
+        },
     danhSachPhanTrang() {
       const batDau = (this.trangHienTai - 1) * this.soMucMoiTrang;
       return this.danhSachLoc.slice(batDau, batDau + this.soMucMoiTrang);
@@ -330,6 +336,10 @@ export default {
     }
   },
   watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        },
+        
     tuKhoaTimKiem() { this.trangHienTai = 1; },
     locTinChi() { this.trangHienTai = 1; }
   },

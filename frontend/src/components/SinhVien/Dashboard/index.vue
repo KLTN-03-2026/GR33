@@ -126,7 +126,7 @@ export default {
         return {
             features: [
                 { icon: 'bi bi-shield-fill-check', title: 'Minh bạch tuyệt đối', desc: 'Mọi bằng cấp và chứng chỉ được mã hóa trên Blockchain, loại bỏ hoàn toàn khả năng làm giả hồ sơ học thuật.' },
-                { icon: 'bi bi-shield-fill-lock', title: 'Quyền sở hữu dữ liệu', desc: 'Bạn là chủ sở hữu duy nhất của hồ sơ. Không ai có quyền truy cập nếu chưa có sự đồng ý của chính bạn thông qua mã DID.' },
+                { icon: 'bi bi-shield-lock-fill', title: 'Quyền sở hữu dữ liệu', desc: 'Bạn là chủ sở hữu duy nhất của hồ sơ. Không ai có quyền truy cập nếu chưa có sự đồng ý của chính bạn thông qua mã DID.' },
                 { icon: 'bi bi-globe', title: 'Liên thông toàn cầu', desc: 'Hồ sơ số của bạn được công nhận bởi các đối tác học thuật và nhà tuyển dụng uy tín trên toàn thế giới.' },
             ],
             guidelines: [

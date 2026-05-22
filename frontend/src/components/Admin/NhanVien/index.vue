@@ -20,6 +20,10 @@
                     <input type="text" v-model="tuKhoaTimKiem" placeholder="Tìm theo tên, email hoặc mã NV..." />
                 </div>
                 <div class="d-flex gap-2">
+                    <select class="form-select btn-light border fw-600 me-2" style="width: auto;" v-model="kieuSapXep">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                    </select>
                     <button class="btn btn-light border" @click="layDuLieu">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
@@ -367,6 +371,7 @@ export default {
             dangTai: false,
             dangLuu: false,
             tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
             laCapNhat: false,
             trangHienTai: 1,
             soBanGhiTrenTrang: 10,
@@ -399,6 +404,7 @@ export default {
                     return ten.includes(kw) || email.includes(kw) || ma.includes(kw);
                 });
             }
+            
             return ketQua;
         },
         danhSachPhanTrang() {
@@ -418,6 +424,10 @@ export default {
         }
     },
     watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        },
+        
         tuKhoaTimKiem() {
             this.trangHienTai = 1;
         }
@@ -460,6 +470,7 @@ export default {
             baseRequestAdmin.get("nhan-viens/get-data")
                 .then(res => {
                     this.danhSach = res.data.list || res.data.data || res.data;
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
                 })
                 .catch(err => {
                     console.error("Lỗi lấy danh sách nhân viên:", err);
