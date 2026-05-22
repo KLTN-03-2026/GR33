@@ -158,15 +158,15 @@ import { jsPDF } from 'jspdf';
 
 export default {
     components: {
-        QrcodeVue,
+        QrcodeVue
     },
     data() {
         return {
             loading: true,
             data: null,
             error: null,
-            currentUrl: window.location.href,
-        };
+            currentUrl: window.location.href
+    };
     },
     mounted() {
         this.fetchData();

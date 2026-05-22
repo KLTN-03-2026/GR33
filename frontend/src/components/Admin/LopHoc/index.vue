@@ -32,6 +32,10 @@
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-end justify-content-end" style="padding-top: 28px;">
+                        <select class="form-select btn-light border fw-600 me-2" style="width: auto;" v-model="kieuSapXep">
+                            <option value="newest">Mới nhất</option>
+                            <option value="oldest">Cũ nhất</option>
+                        </select>
                         <button class="btn btn-light border" @click="layDuLieu" title="Làm mới">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
@@ -376,6 +380,7 @@ export default {
             dangTai: false,
             dangLuu: false,
             tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
             tuKhoaTimKiemMonHoc: "",
             locNamHoc: "",
             namBatDau: 2025,
@@ -452,6 +457,10 @@ export default {
         }
     },
     watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        },
+        
         tuKhoaTimKiem() { this.trangHienTai = 1; },
         locNamHoc() { this.trangHienTai = 1; }
     },
@@ -472,6 +481,7 @@ export default {
                 .then(res => this.danhSach = res.data.data || [])
                 .catch(err => console.error(err))
                 .finally(() => this.dangTai = false);
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
         },
         layMonHoc() {
             baseRequestAdmin.get("mon-hocs/get-data")

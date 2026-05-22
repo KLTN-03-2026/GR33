@@ -32,7 +32,11 @@
               <option value="2">Thất bại</option>
             </select>
           </div>
-          <div class="col-md-2 d-flex align-items-end justify-content-end" style="padding-top: 28px;">
+          <div class="col-md-2 d-flex align-items-end justify-content-end gap-2" style="padding-top: 28px;">
+            <select class="form-select btn-light border fw-600" style="width: auto;" v-model="kieuSapXep">
+              <option value="newest">Mới nhất</option>
+              <option value="oldest">Cũ nhất</option>
+            </select>
             <button class="btn btn-light border" @click="layDanhSach" title="Làm mới">
               <i class="bi bi-arrow-clockwise"></i>
             </button>
@@ -300,6 +304,7 @@ export default {
       },
       page: 1,
       total: 0,
+      kieuSapXep: 'newest',
       hasMore: false,
       dangTai: false,
       selectedItem: null,
@@ -311,6 +316,11 @@ export default {
       reasonRevoke: '',
       dangTaiRevoke: false
     };
+  },
+  watch: {
+    kieuSapXep() {
+      this.layDanhSach();
+    }
   },
   mounted() {
     this.layDanhSach();
@@ -328,6 +338,7 @@ export default {
           page: this.page,
           type: this.loc.loai,
           status: this.loc.trang_thai,
+          sort_order: this.kieuSapXep,
           limit: 10
         }
       })

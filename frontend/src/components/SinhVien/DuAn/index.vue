@@ -27,9 +27,15 @@
           <i class="bi bi-search search-icon"></i>
           <input type="text" v-model="tuKhoaTimKiem" placeholder="Tìm theo tên hoặc mã dự án..." />
         </div>
-        <button class="btn btn-light-pink" @click="layDuLieu">
+        <div class="d-flex gap-2 align-items-center">
+                    <select class="form-select btn-light-pink border-pink fw-600" style="width: auto;" v-model="kieuSapXep">
+                            <option value="newest">Mới nhất</option>
+                            <option value="oldest">Cũ nhất</option>
+                        </select>
+                    <button class="btn btn-light-pink" @click="layDuLieu">
           <i class="bi bi-arrow-clockwise"></i>
         </button>
+                </div>
       </div>
 
       <div class="table-responsive">
@@ -264,6 +270,7 @@ export default {
       dangLuuNFT: false,
       laCapNhat: false,
       tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
       duLieuForm: {
         id: null,
         ma_du_an: "",
@@ -276,7 +283,7 @@ export default {
       selectedNft: null,
       instanceModal: null,
       instanceModalChiTiet: null,
-      instanceModalNFT: null,
+      instanceModalNFT: null
     };
   },
   computed: {
@@ -289,7 +296,12 @@ export default {
       );
     }
   },
-  mounted() {
+  watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        }
+    },
+    mounted() {
     this.layDuLieu();
     if (window.bootstrap) {
       this.instanceModal = new window.bootstrap.Modal(this.$refs.refsModal);
@@ -337,6 +349,7 @@ export default {
       baseRequestSinhVien.get("du-ans/get-data")
         .then(res => {
           this.danhSach = res.data.list || res.data.data || [];
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
         })
         .catch(err => {
           this.$toast.error("Không thể tải danh sách dự án!");
@@ -420,9 +433,8 @@ export default {
         }).finally(() => {
             this.dangLuuNFT = false;
         });
-    },
-
-  }
+    }
+    }
 };
 </script>
 

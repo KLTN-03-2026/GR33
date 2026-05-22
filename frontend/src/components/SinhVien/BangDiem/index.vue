@@ -47,7 +47,7 @@
           <div class="icon-box bg-pink-subtle text-accent"><i class="bi bi-check-circle-fill"></i></div>
           <div>
             <div class="small text-muted fw-600">MÔN HỌC ĐÃ HOÀN THÀNH</div>
-            <div class="fs-3 fw-800 text-dark">{{ danhSach.length }}</div>
+            <div class="fs-3 fw-800 text-dark">{{ tinhSoMonHoanThanh }}</div>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@
                 </div>
               </td>
               <td class="text-center fw-800 text-success">
-                {{ quyDoiHe4(item.diem_chu) }}
+                {{ item.diem_tong_ket !== null && item.diem_tong_ket !== undefined ? quyDoiHe4(item.diem_chu) : '---' }}
               </td>
               <td class="text-center">
                 <span class="badge" :class="layLopTrangThai(item.trang_thai)">
@@ -212,19 +212,25 @@ export default {
       dangLuu: false,
       itemYeuCau: null,
       selectedNft: null,
-      instanceModalNFT: null,
+      instanceModalNFT: null
     };
   },
   computed: {
     tinhTongTinChi() {
-      return this.danhSach.reduce((sum, item) => sum + (item.lop_hoc?.mon_hoc?.so_tin_chi || 0), 0);
+      return this.danhSach
+        .filter(item => item.diem_tong_ket !== null && item.diem_tong_ket !== undefined)
+        .reduce((sum, item) => sum + (item.lop_hoc?.mon_hoc?.so_tin_chi || 0), 0);
+    },
+    tinhSoMonHoanThanh() {
+      return this.danhSach.filter(item => item.diem_tong_ket !== null && item.diem_tong_ket !== undefined).length;
     },
     tinhGPA() {
-      if (this.danhSach.length === 0) return "0.0";
+      const danhSachCoDiem = this.danhSach.filter(item => item.diem_tong_ket !== null && item.diem_tong_ket !== undefined);
+      if (danhSachCoDiem.length === 0) return "0.0";
       let tongDiem = 0;
       let tongTinChi = 0;
-      this.danhSach.forEach(item => {
-        const diem = this.tinhDiemTongKet(item);
+      danhSachCoDiem.forEach(item => {
+        const diem = item.diem_tong_ket;
         const tinChi = item.lop_hoc?.mon_hoc?.so_tin_chi || 0;
         tongDiem += diem * tinChi;
         tongTinChi += tinChi;
@@ -232,10 +238,11 @@ export default {
       return tongTinChi === 0 ? "0.0" : (tongDiem / tongTinChi).toFixed(2);
     },
     tinhGPAHe4() {
-      if (this.danhSach.length === 0) return "0.00";
+      const danhSachCoDiem = this.danhSach.filter(item => item.diem_tong_ket !== null && item.diem_tong_ket !== undefined);
+      if (danhSachCoDiem.length === 0) return "0.00";
       let tongDiem4 = 0;
       let tongTinChi = 0;
-      this.danhSach.forEach(item => {
+      danhSachCoDiem.forEach(item => {
         const diem4 = this.quyDoiHe4(item.diem_chu);
         const tinChi = item.lop_hoc?.mon_hoc?.so_tin_chi || 0;
         tongDiem4 += diem4 * tinChi;
@@ -363,9 +370,8 @@ export default {
         }).finally(() => {
             this.dangLuu = false;
         });
-    },
-
-  }
+    }
+    }
 };
 </script>
 

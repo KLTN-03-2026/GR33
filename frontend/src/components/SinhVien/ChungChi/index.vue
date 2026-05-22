@@ -27,9 +27,15 @@
                     <i class="bi bi-search search-icon"></i>
                     <input type="text" v-model="tuKhoaTimKiem" placeholder="Tìm theo tên hoặc mã chứng chỉ..." />
                 </div>
-                <button class="btn btn-light-pink" @click="layDuLieu">
+                <div class="d-flex gap-2 align-items-center">
+                    <select class="form-select btn-light-pink border-pink fw-600" style="width: auto;" v-model="kieuSapXep">
+                            <option value="newest">Mới nhất</option>
+                            <option value="oldest">Cũ nhất</option>
+                        </select>
+                    <button class="btn btn-light-pink" @click="layDuLieu">
                     <i class="bi bi-arrow-clockwise"></i>
                 </button>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -165,7 +171,7 @@
                                     </div>
                                     
                                     <div v-if="!isDonViKhac">
-                                        <select class="form-select flux-input-lg" v-model="duLieuForm.don_vi_cap_id" required>
+                                        <select class="form-select btn-light-pink border-pink fw-600" v-model="duLieuForm.don_vi_cap_id" required>
                                             <option value="" disabled>Chọn đơn vị cấp...</option>
                                             <option v-for="dv in danhSachDonViCap" :key="dv.id" :value="dv.id">
                                                 {{ dv.ten_don_vi }}
@@ -179,7 +185,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-700 small text-uppercase opacity-75">Loại chứng chỉ</label>
-                                    <select class="form-select flux-input-lg" v-model="duLieuForm.loai_chung_chi" required>
+                                    <select class="form-select btn-light-pink border-pink fw-600" v-model="duLieuForm.loai_chung_chi" required>
                                         <option value="ngoai_ngu">Ngoại ngữ</option>
                                         <option value="tin_hoc">Tin học</option>
                                         <option value="ky_nang">Kỹ năng</option>
@@ -374,6 +380,7 @@ export default {
             dangLuuNFT: false,
             laCapNhat: false,
             tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
             isDonViKhac: false,
             fileChon: null,
             duLieuForm: {
@@ -394,8 +401,8 @@ export default {
             selectedNft: null,
             instanceModal: null,
             instanceModalChiTiet: null,
-            instanceModalNFT: null,
-        };
+            instanceModalNFT: null
+    };
     },
     computed: {
         danhSachLoc() {
@@ -405,6 +412,11 @@ export default {
                 item.ten_chung_chi.toLowerCase().includes(kw) || 
                 item.ma_chung_chi.toLowerCase().includes(kw)
             );
+        }
+    },
+    watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
         }
     },
     mounted() {
@@ -463,6 +475,7 @@ export default {
             baseRequestSinhVien.get("chung-chis/get-data")
                 .then(res => {
                     this.danhSach = res.data.data || [];
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
                 })
                 .catch(err => {
                     this.$toast.error("Lỗi tải danh sách chứng chỉ!");
@@ -589,8 +602,7 @@ export default {
             }).finally(() => {
                 this.dangLuuNFT = false;
             });
-        },
-
+        }
     }
 };
 </script>

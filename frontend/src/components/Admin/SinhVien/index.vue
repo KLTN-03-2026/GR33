@@ -20,9 +20,15 @@
                     <input type="text" v-model="tuKhoaTimKiem" placeholder="Tìm theo tên, email hoặc mã SV..." />
                 </div>
                 <div class="d-flex gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                    <select class="form-select btn-light-pink border-pink fw-600" style="width: auto;" v-model="kieuSapXep">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                    </select>
                     <button class="btn btn-light border" @click="layDuLieu">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
+                </div>
                 </div>
             </div>
 
@@ -397,6 +403,7 @@ export default {
             dangTai: false,
             dangLuu: false,
             tuKhoaTimKiem: "",
+            kieuSapXep: 'newest',
             laCapNhat: false,
             trangHienTai: 1,
             soBanGhiTrenTrang: 10,
@@ -431,6 +438,7 @@ export default {
                     return ten.includes(kw) || email.includes(kw) || ma.includes(kw);
                 });
             }
+            
             return ketQua;
         },
         danhSachPhanTrang() {
@@ -450,6 +458,10 @@ export default {
         }
     },
     watch: {
+        kieuSapXep() {
+            if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
+        },
+        
         tuKhoaTimKiem() {
             this.trangHienTai = 1;
         }
@@ -483,8 +495,8 @@ export default {
                 1: 'status-active',
                 0: 'status-danger',
                 2: 'status-warning',
-                3: 'status-info',
-            };
+                3: 'status-info'
+    };
             return classes[status] || '';
         },
         layDuLieu() {
@@ -492,6 +504,7 @@ export default {
             baseRequestAdmin.get("sinh-viens/get-data")
                 .then(res => {
                     this.danhSach = res.data.list || res.data.data || res.data;
+                    if(this.danhSach) this.danhSach = [...this.danhSach].sort((a, b) => this.kieuSapXep === 'newest' ? b.id - a.id : a.id - b.id);
                 })
                 .catch(err => {
                     console.error("Lỗi lấy danh sách sinh viên:", err);
