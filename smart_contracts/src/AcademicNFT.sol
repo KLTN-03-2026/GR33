@@ -45,8 +45,8 @@ contract AcademicNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Đúc một NFT hồ sơ học tập mới.
      * @param to Địa chỉ ví của sinh viên sở hữu hồ sơ.
      * @param dataHash Mã băm SHA-256 của hồ sơ (từ Backend).
-     * @param tokenUri Đường dấn tới Metadata (thường là IPFS).
-     * @param signature Chữ ký điện tử của Admin (từ Backend).
+     * @param tokenUri Đường dấn tới Metadata.
+     * @param signature Chữ ký điện tử của Admin.
      * @param operatorId Mã ID của nhân viên thực hiện thao tác.
      * @param metadata Chuỗi JSON chứa dữ liệu chi tiết hồ sơ.
      */

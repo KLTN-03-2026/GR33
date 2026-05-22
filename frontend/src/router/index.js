@@ -191,7 +191,12 @@ const routes = [
     {
         path: "/",
         redirect: "/sinh-vien"
-    }
+    },
+    {
+        path: "/thuyet-trinh",
+        component: () => import("../components/ThuyetTrinh/Slide/index.vue"),
+        meta: { layout: "blank" }
+    }   
 ];
 
 const router = createRouter({
